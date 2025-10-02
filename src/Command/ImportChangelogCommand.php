@@ -5,14 +5,18 @@ namespace App\Command;
 use App\Entity\Changelog;
 use App\Service\Metier\TrelloServiceSM;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[AsCommand(
+    name: 'app:changelog:import',
+    description: 'Importe les commits Git dans la table Changelog et les associe aux cartes Trello si disponible.'
+)]
 class ImportChangelogCommand extends Command
 {
-    protected static $defaultName = 'app:changelog:import';
     private EntityManagerInterface $em;
     private TrelloServiceSM $trelloService;
 
@@ -130,6 +134,7 @@ class ImportChangelogCommand extends Command
 
         $this->em->flush();
         $output->writeln('<info>Import terminé.</info>');
+
         return Command::SUCCESS;
     }
 }
