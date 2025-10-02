@@ -41,11 +41,11 @@ class Changelog
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $author = null;
 
-    #[ORM\Column(type: 'datetime', nullable: true)]
-    private ?\DateTimeInterface $committedAt = null;
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    private ?\DateTimeImmutable $committedAt = null;
 
-    #[ORM\Column(type: 'datetime')]
-    private \DateTimeInterface $createdAt;
+    #[ORM\Column(type: 'datetime_immutable')]
+    private \DateTimeImmutable $createdAt;
 
     public function __construct()
     {
@@ -74,7 +74,7 @@ class Changelog
     public function setFiles(?array $f): self { $this->files = $f; return $this; }
     public function getAuthor(): ?string { return $this->author; }
     public function setAuthor(?string $a): self { $this->author = $a; return $this; }
-    public function getCommittedAt(): ?\DateTimeInterface { return $this->committedAt; }
-    public function setCommittedAt(?\DateTimeInterface $d): self { $this->committedAt = $d; return $this; }
-    public function getCreatedAt(): \DateTimeInterface { return $this->createdAt; }
+    public function getCommittedAt(): ?\DateTimeImmutable { return $this->committedAt; }
+    public function setCommittedAt(?\DateTimeImmutable $d): self { $this->committedAt = $d; return $this; }
+    public function getCreatedAt(): \DateTimeImmutable { return $this->createdAt; }
 }
