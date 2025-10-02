@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+{% block title %}Changelog{% endblock %}
+
+{% block body %}
+<h1 class="mb-4">Changelog</h1>
+
+{% set groups = {} %}
+{% for e in entries %}
+  {% set v = e.version ?: 'Unreleased' %}
+  {% if groups[v] is not defined %}
+    {% set groups = groups|merge({ (v): [] }) %}
+  {% endif %}
+  {% set groups = groups|merge({ (v): groups[v]|merge([e]) }) %}
+{% endfor %}
+
+{% for version, items in groups %}
+  <div class="card mb-3">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <strong>{{ version }}</strong>
+      <span class="badge bg-secondary">{{ items|length }} items</span>
+    </div>
+    <div class="card-body">
+      <ul class="list-group">
+        {% for item in items %}
+          <li class="list-group-item">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <span class="badge bg-{{ item.type == 'feat' ? 'success' : item.type == 'fix' ? 'warning' : 'secondary' }} me-2">{{ item.type|upper }}</span>
+                {{ item.description }}
+                {% if item.trelloCardUrl %}
+                  - <a href="{{ item.trelloCardUrl }}" target="_blank">{{ item.trelloCardName ?: item.trelloCardShortlink }}</a>
+                {% elseif item.trelloCardShortlink %}
+                  - {{ item.trelloCardShortlink }}
+                {% endif %}
+                <div class="text-muted small mt-1">
+                  par {{ item.author ?: 'inconnu' }}{% if item.committedAt %} • {{ item.committedAt|date('Y-m-d H:i') }}{% endif %}
+                </div>
+              </div>
+              <div class="text-end">
+                <small class="text-muted">{{ item.commitHash|slice(0,7) }}</small>
+                <button class="btn btn-sm btn-link" data-bs-toggle="collapse" data-bs-target="#files-{{ item.id }}">Voir fichiers</button>
+              </div>
+            </div>
+
+            <div id="files-{{ item.id }}" class="collapse mt-2">
+              {% if item.files is empty %}
+                <div class="text-muted small">Aucun fichier enregistré.</div>
+              {% else %}
+                <ul class="list-unstyled mb-0">
+                  {% for f in item.files %}
+                    <li>
+                      <a href="https://github.com/ORG/REPO/blob/{{ item.commitHash }}/{{ f.path }}" target="_blank">{{ f.path }}</a>
+                      <small class="text-muted">(+{{ f.add ?? 0 }} / -{{ f.del ?? 0 }})</small>
+                    </li>
+                  {% endfor %}
+                </ul>
+              {% endif %}
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+{% endfor %}
+{% endblock %}

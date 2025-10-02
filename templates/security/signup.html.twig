@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription</title>
+    <link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap.min.css') }}">
+</head>
+<body>
+    <h1>Inscription</h1>
+    <form action="{{ path('app_registration') }}" method="post">
+
+        <input type="email" name="email" placeholder="email" class="form-control">
+        <input type="text" name="password" placeholder="password" class="form-control">
+        <input type="text" name="confirm" placeholder="confirm password" class="form-control">
+
+        <button type="submit" class="btn btn-primary">inscription</button>
+        <a href="{{ path('app_login') }}">retour</a>
+    </form>
+
+    <script src="{{ asset('bootstrap/js/bootstrap.min.js') }}"></script>
+</body>
+</html>
